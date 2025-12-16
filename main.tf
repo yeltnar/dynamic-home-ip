@@ -25,12 +25,29 @@ variable "home_ip" {
   description = "public ip address of the house"
 }
 
+variable "firewall_id" {
+  type        = string
+  description = "id of firewall to be used"
+}
+
+variable "droplet_id" {
+  type        = string
+  description = "id of droplet to attach to the firewall"
+}
+
+import {
+    to = digitalocean_firewall.myfirewall
+    id = var.firewall_id
+}
+
 resource "digitalocean_firewall" "myfirewall" {
   name = "firewall"
 
   # Attach the firewall to all resources with the "web-tier" tag
   # tags = ["web-tier"] 
-  # droplet_ids = []
+  droplet_ids = [
+    var.droplet_id
+  ]
   
   inbound_rule {
     # Allow SSH from anywhere (your local machine)
