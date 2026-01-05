@@ -3,6 +3,7 @@ keys:
   - &drew-lin-desktop-password 78605C4640B113A2D0FC510064ECB5490A8BEEC1
   - &drew-lin-lap-password CC64A3CAF952BFDFE790FA55D4ABB1A749A7E49B
   - &nixos-password F08A86481C209304D4EE2EF0300E2953289B089B
+  - &mac-password 5AA208A54210AAC38AF5FBD6C1A0C9F6CC44288A
 creation_rules:
   - path_regex: .
     age:
@@ -11,3 +12,4 @@ creation_rules:
       - *drew-lin-desktop-password
       - *drew-lin-lap-password
       - *nixos-password
+      - *mac-password
