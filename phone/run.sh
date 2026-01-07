@@ -28,7 +28,6 @@ encrypt(){
 }
 
 autofix(){
-
   decrypt
   unzip
   update
@@ -36,7 +35,12 @@ autofix(){
   encrypt
 }
 
-ALLOWED_FUNCTIONS="autofix"
+update_phone(){
+  git pull
+  decrypt
+}
+
+ALLOWED_FUNCTIONS="autofix update_phone"
 
 ACTION="$1"
 
