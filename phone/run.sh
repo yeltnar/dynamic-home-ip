@@ -11,12 +11,10 @@ cleanup(){
 
 decrypt(){
   sops -d out.zip.enc > out.zip || exit 1 
-  trap cleanup EXIT # TODO consider if this is desired
 }
 
 unzip(){
   unzip out.zip || exit 1 
-  trap cleanup EXIT # TODO consider if this is desired
 }
 
 update(){
@@ -33,6 +31,8 @@ encrypt(){
 }
 
 autofix(){
+  trap cleanup EXIT # TODO consider if this is desired
+
   decrypt
   unzip
   update
