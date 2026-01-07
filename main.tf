@@ -4,6 +4,10 @@ terraform {
       source  = "digitalocean/digitalocean"
       version = "~> 2.0" # Specify a compatible version
     }
+    uptimekuma = {
+      source  = "breml/uptimekuma"
+      version = "~> 0.1.0" # Use the latest version
+    }
   }
 }
 
@@ -33,6 +37,21 @@ variable "firewall_id" {
 variable "droplet_id" {
   type        = string
   description = "id of droplet to attach to the firewall"
+}
+
+variable "kuma_user" {
+  type        = string
+  description = "user for uptime kuma"
+}
+
+variable "kuma_url" {
+  type        = string
+  description = "url for uptime kuma"
+}
+
+variable "kuma_password" {
+  type        = string
+  description = "password for uptime kuma"
 }
 
 import {
@@ -106,6 +125,30 @@ resource "digitalocean_firewall" "myfirewall" {
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 
+}
+
+provider "uptimekuma" {
+  endpoint = var.kuma_url
+  username = var.kuma_user
+  password = var.kuma_password
+}
+
+data "uptimekuma_monitor_group" "ip" {
+  name = "ip"
+}
+
+resource "uptimekuma_monitor_http_json_query" "example" {
+  name     = "ip change tofu"
+  url      = "https://ip-json.andbrant.com"
+  json_path = "ip"
+  # json_path_expected = var.home_ip
+  # json_path_expected = ""
+  # expected_value = ""
+  expected_value = var.home_ip
+  # interval = 600
+  # active = true
+  notification_ids = [ 1 ] # TODO set up ntfy too, and set this to its value
+  parent   = data.uptimekuma_monitor_group.ip.id
 }
 
 output "firewall_id" {
