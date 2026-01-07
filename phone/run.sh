@@ -1,3 +1,8 @@
+# needed for phone... I assume this is good for others too
+export GPG_TTY=$(tty)
+
+public_ip="$(curl https://ip.andbrant.com)"
+
 cleanup(){
   # delete unencrypted files
   rm out.zip 
