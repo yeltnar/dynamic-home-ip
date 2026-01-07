@@ -4,7 +4,15 @@ keys:
   - &drew-lin-lap-password CC64A3CAF952BFDFE790FA55D4ABB1A749A7E49B
   - &nixos-password F08A86481C209304D4EE2EF0300E2953289B089B
   - &mac-password 5AA208A54210AAC38AF5FBD6C1A0C9F6CC44288A
+  - &phone-password C7EC55B2FA14396B7E0E986EB79970290BA347BA
 creation_rules:
+  - path_regex: phone.*
+    age:
+      - *backup-key
+    pgp:
+      - *drew-lin-desktop-password
+      - *drew-lin-lap-password
+      - *phone-password
   - path_regex: .
     age:
       - *backup-key
@@ -13,3 +21,4 @@ creation_rules:
       - *drew-lin-lap-password
       - *nixos-password
       - *mac-password
+      - *phone-password
