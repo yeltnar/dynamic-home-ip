@@ -169,3 +169,8 @@ output "firewall_id" {
   description = "The unique ID of the managed web firewall."
 }
 
+output "ip_monitor_id" {
+  value = var.ip_monitor_id
+  description = "id of ip monitor tofu is managing"
+}
+
