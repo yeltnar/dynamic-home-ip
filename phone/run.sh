@@ -1,8 +1,6 @@
 # needed for phone... I assume this is good for others too
 export GPG_TTY=$(tty)
 
-public_ip="$(curl https://ip.andbrant.com)"
-
 cleanup(){
   # delete unencrypted files
   rm out.zip 
@@ -45,7 +43,7 @@ update_phone(){
   decrypt
 }
 
-ALLOWED_FUNCTIONS="autofix update_phone"
+ALLOWED_FUNCTIONS="autofix update_phone decrypt"
 
 ACTION="$1"
 
