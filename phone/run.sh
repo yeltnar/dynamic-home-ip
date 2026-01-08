@@ -13,7 +13,7 @@ decrypt(){
   sops -d out.zip.enc > out.zip || exit 1 
 }
 
-unzip(){
+local_unzip(){
   unzip out.zip || exit 1 
 }
 
@@ -22,7 +22,7 @@ update(){
   sed -i -E "s/Endpoint.* [0-9\.]+:/Endpoint = $public_ip:/" *.conf
 }
 
-zip(){
+local_zip(){
   zip out.zip *conf || exit 1 
 }
 
@@ -34,9 +34,9 @@ autofix(){
   trap cleanup EXIT # TODO consider if this is desired
 
   decrypt
-  unzip
+  local_unzip
   update
-  zip
+  local_zip
   encrypt
 }
 
