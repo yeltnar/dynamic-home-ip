@@ -34,6 +34,12 @@ variable "firewall_id" {
   description = "id of firewall to be used"
 }
 
+# found at end of url when editing uptime kuma monitor
+variable "ip_monitor_id" {
+  type        = string
+  description = "id of uptime kuma monitor to update"
+}
+
 variable "droplet_id" {
   type        = string
   description = "id of droplet to attach to the firewall"
@@ -137,7 +143,12 @@ data "uptimekuma_monitor_group" "ip" {
   name = "ip"
 }
 
-resource "uptimekuma_monitor_http_json_query" "example" {
+import {
+    to = uptimekuma_monitor_http_json_query.ip_change_tofu
+    id = var.ip_monitor_id
+}
+
+resource "uptimekuma_monitor_http_json_query" "ip_change_tofu" {
   name     = "ip change tofu"
   url      = "https://ip-json.andbrant.com"
   json_path = "ip"
@@ -149,6 +160,8 @@ resource "uptimekuma_monitor_http_json_query" "example" {
   # active = true
   notification_ids = [ 1 ] # TODO set up ntfy too, and set this to its value
   parent   = data.uptimekuma_monitor_group.ip.id
+  resend_interval = 360
+  max_retries = 0
 }
 
 output "firewall_id" {
