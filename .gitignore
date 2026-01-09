@@ -2,3 +2,4 @@
 .env
 plan.hcl
 phone/out.zip
+terraform.tfstate
