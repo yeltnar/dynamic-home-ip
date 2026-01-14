@@ -15,5 +15,5 @@ echo "TF_VAR_home_ip is $TF_VAR_home_ip"
 
 # tofu init
 tofu plan -out ./plan.hcl
-&& tofu apply ./plan.hcl
+# && tofu apply ./plan.hcl
 # tofu destroy
