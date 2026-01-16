@@ -1,18 +1,23 @@
 # needed for phone... I assume this is good for others too
 export GPG_TTY=$(tty)
 
+if [ -z "$device" ]; then
+  echo "'device' variable not defined; exting"
+  exit 1
+fi
+
 cleanup(){
   # delete unencrypted files
-  rm out.zip 
+  rm "$device.zip" 
   rm *conf
 }
 
 decrypt(){
-  sops -d out.zip.enc > out.zip || exit 1 
+  sops -d "$device.zip.enc" > "$device.zip" || exit 1 
 }
 
 local_unzip(){
-  unzip out.zip || exit 1 
+  unzip "$device.zip" || exit 1 
 }
 
 update(){
@@ -21,11 +26,11 @@ update(){
 }
 
 local_zip(){
-  zip out.zip *conf || exit 1 
+  zip "$device.zip" *conf || exit 1 
 }
 
 encrypt(){
-  sops -e out.zip > out.zip.enc || exit 1 
+  sops -e "$device.zip" > "$device.zip.enc" || exit 1 
 }
 
 autofix(){
