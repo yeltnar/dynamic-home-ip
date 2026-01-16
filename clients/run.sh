@@ -1,6 +1,8 @@
 # needed for phone... I assume this is good for others too
 export GPG_TTY=$(tty)
 
+source local.env
+
 if [ -z "$device" ]; then
   echo "'device' variable not defined; exting"
   exit 1
@@ -48,7 +50,16 @@ update_phone(){
   decrypt
 }
 
-ALLOWED_FUNCTIONS="autofix update_phone decrypt"
+zip_encrypt(){
+  trap 'rm "$device.zip"' EXIT
+
+  local_zip
+  encrypt
+
+  echo "zip and encrypt done; consider deleting *conf files"
+}
+
+ALLOWED_FUNCTIONS="autofix update_phone decrypt zip_encrypt"
 
 ACTION="$1"
 

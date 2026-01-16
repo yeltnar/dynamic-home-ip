@@ -3,3 +3,4 @@
 plan.hcl
 phone/out.zip
 terraform.tfstate
+clients/local.env
