@@ -1,6 +1,7 @@
 .terraform
 .env
 plan.hcl
-phone/out.zip
+clients/*.zip$
+clients/*.conf$
 terraform.tfstate
 clients/local.env

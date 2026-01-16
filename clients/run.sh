@@ -1,6 +1,15 @@
 # needed for phone... I assume this is good for others too
 export GPG_TTY=$(tty)
 
+if sed --version >/dev/null 2>&1; then
+  echo "You are using GNU sed (Linux style)"
+  # Use: sed -i 's/find/replace/g'
+else
+  echo "You are using BSD sed (Mac style); try nix-shell -p gnused; exiting"
+  # Use: sed -i "" 's/find/replace/g'
+  exit 1
+fi
+
 source local.env
 
 if [ -z "$device" ]; then
