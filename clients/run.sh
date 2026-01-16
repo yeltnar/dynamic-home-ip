@@ -1,46 +1,70 @@
 # needed for phone... I assume this is good for others too
 export GPG_TTY=$(tty)
 
-if sed --version >/dev/null 2>&1; then
-  echo "You are using GNU sed (Linux style)"
-  # Use: sed -i 's/find/replace/g'
-else
-  echo "You are using BSD sed (Mac style); try nix-shell -p gnused; exiting"
-  # Use: sed -i "" 's/find/replace/g'
-  exit 1
-fi
+# this is such an odd way to do this
+check_device_set(){
+  source local.env
+  if [ -z "$device" ]; then
+    echo "'device' variable not defined; exting"
+    exit 1
+  fi
+}
 
-source local.env
-
-if [ -z "$device" ]; then
-  echo "'device' variable not defined; exting"
-  exit 1
-fi
+check_sed(){
+  if sed --version >/dev/null 2>&1; then
+    echo "You are using GNU sed (Linux style)"
+    # Use: sed -i 's/find/replace/g'
+  else
+    echo "You are using BSD sed (Mac style); try nix-shell -p gnused; exiting"
+    # Use: sed -i "" 's/find/replace/g'
+    exit 1
+  fi
+}
 
 cleanup(){
+  check_device_set 
   # delete unencrypted files
   rm "$device.zip" 
   rm *conf
 }
 
 decrypt(){
+  check_device_set
   sops -d "$device.zip.enc" > "$device.zip" || exit 1 
 }
 
 local_unzip(){
+  check_device_set
   unzip "$device.zip" || exit 1 
 }
 
+get_public_ip(){
+  
+  source <(sops -d ../.enc.env)
+
+  curl -H "Authorization:Bearer $ntfy_token" "$ntfy_endpoint/$ntfy_topic/json?since=5m&poll=1" | 
+    jq -r .message |
+    jq -r 'select(.device_name | test("vm-nix-vm")) .pub_ip' |
+    head -1
+}
+
 update(){
-  public_ip="$(curl https://ip.andbrant.com)"
+  check_sed
+  # public_ip="$(curl https://ip.andbrant.com)"
+
+  public_ip="$(get_public_ip)"
+
+  echo "$public_ip"
   sed -i -E "s/Endpoint.* [0-9\.]+:/Endpoint = $public_ip:/" *.conf
 }
 
 local_zip(){
+  check_device_set
   zip "$device.zip" *conf || exit 1 
 }
 
 encrypt(){
+  check_device_set
   sops -e "$device.zip" > "$device.zip.enc" || exit 1 
 }
 
